@@ -20,6 +20,8 @@ import { Button } from "@/components/ui/Button";
 import { Input, Textarea } from "@/components/ui/Input";
 import { ItemCategory, ListingType } from "@/lib/types/listing";
 import { CURRENT_DEMO_USER } from "@/lib/demo/seedData";
+import { DemoStore } from "@/lib/demo/store";
+import { inferCategoryFromText } from "@/lib/demo/simulatedRekognition";
 import { MatchCandidate } from "@/lib/types/match";
 
 const CATEGORIES: ItemCategory[] = [
@@ -87,6 +89,11 @@ function ReportContent() {
       return;
     }
 
+    const detectedFromFilename = inferCategoryFromText(file.name);
+    if (detectedFromFilename) {
+      setCategory(detectedFromFilename);
+    }
+
     setUploadProgress(10);
     const reader = new FileReader();
     reader.onload = () => {
@@ -145,6 +152,9 @@ function ReportContent() {
 
       const json = await res.json();
       if (json.success && json.data) {
+        // Save to client-side DemoStore immediately so Explore, Matches & other views have it
+        DemoStore.saveListing(json.data.listing);
+
         setSubmissionResult({
           listingId: json.data.listing.id,
           matches: json.data.matches || [],
@@ -163,29 +173,29 @@ function ReportContent() {
   if (submissionResult) {
     return (
       <div className="max-w-2xl mx-auto space-y-6 py-6 animate-fade-in">
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-6 sm:p-8 text-center space-y-4">
-          <div className="h-14 w-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
+        <div className="rounded-2xl border border-emerald-200 dark:border-emerald-800/60 bg-emerald-50/60 dark:bg-emerald-950/40 p-6 sm:p-8 text-center space-y-4">
+          <div className="h-14 w-14 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-sm">
             <CheckCircle2 className="h-8 w-8" />
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
             {type === "lost" ? "Lost Report Registered" : "Found Item Registered"}
           </h2>
 
-          <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
             Your listing has been saved and analyzed. Rekognition visual tags have been extracted and cross-referenced against all compatible records.
           </p>
 
           {submissionResult.labels.length > 0 && (
             <div className="pt-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
                 Detected Visual Labels:
               </span>
               <div className="flex flex-wrap justify-center gap-1.5">
                 {submissionResult.labels.map((lbl) => (
                   <span
                     key={lbl.name}
-                    className="text-xs font-medium px-2.5 py-1 rounded-full bg-white text-indigo-700 border border-indigo-100 shadow-2xs"
+                    className="text-xs font-medium px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800/60 shadow-2xs"
                   >
                     {lbl.name} ({Math.round(lbl.confidence)}%)
                   </span>
@@ -195,15 +205,15 @@ function ReportContent() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-sm space-y-4">
+        <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-indigo-600" />
+            <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
               <span>Potential Matches Discovered ({submissionResult.matches.length})</span>
             </h3>
             <Link
               href="/matches"
-              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800"
+              className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
               Matching Workspace →
             </Link>
@@ -214,21 +224,21 @@ function ReportContent() {
               {submissionResult.matches.slice(0, 3).map((match) => (
                 <div
                   key={match.id}
-                  className="p-3.5 rounded-xl border border-slate-100 bg-slate-50 flex items-center justify-between text-xs"
+                  className="p-3.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between text-xs"
                 >
                   <div>
-                    <h4 className="font-bold text-slate-900">
+                    <h4 className="font-bold text-slate-900 dark:text-white">
                       {type === "lost" ? match.foundListing?.title : match.lostListing?.title}
                     </h4>
-                    <p className="text-slate-500 mt-0.5 line-clamp-1">
+                    <p className="text-slate-600 dark:text-slate-400 mt-0.5 line-clamp-1">
                       {match.explanation.summary}
                     </p>
                   </div>
                   <div className="text-right shrink-0 ml-3">
-                    <span className="text-base font-black text-indigo-600">
+                    <span className="text-base font-black text-indigo-600 dark:text-indigo-400">
                       {Math.round(match.score)}%
                     </span>
-                    <span className="text-[10px] block text-slate-400 capitalize">
+                    <span className="text-[10px] block text-slate-500 dark:text-slate-400 capitalize">
                       {match.strength}
                     </span>
                   </div>
@@ -236,12 +246,12 @@ function ReportContent() {
               ))}
             </div>
           ) : (
-            <div className="p-6 text-center text-slate-400 text-xs bg-slate-50 rounded-xl">
+            <div className="p-6 text-center text-slate-500 dark:text-slate-400 text-xs bg-slate-50 dark:bg-slate-800/40 rounded-xl">
               No compatible match candidates discovered yet. You will be notified automatically if another student posts an overlapping item.
             </div>
           )}
 
-          <div className="flex justify-between items-center pt-4 border-t border-slate-100">
+          <div className="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-800">
             <Link href={`/listings/${submissionResult.listingId}`}>
               <Button variant="primary" size="sm">
                 View My Listing Details
@@ -261,24 +271,24 @@ function ReportContent() {
   return (
     <div className="max-w-3xl mx-auto space-y-8 pb-12">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
           File a Campus Report
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
           Submit details and a photo to enable instant AI visual extraction and candidate matching.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {formError && (
-          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+          <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{formError}</span>
           </div>
         )}
 
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-2xs space-y-2">
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-2xs space-y-2">
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
             Report Type *
           </label>
           <div className="grid grid-cols-2 gap-3">
@@ -287,8 +297,8 @@ function ReportContent() {
               onClick={() => setType("lost")}
               className={`py-3 px-4 rounded-lg font-bold text-sm border text-center transition-all ${
                 type === "lost"
-                  ? "bg-amber-50 text-amber-800 border-amber-300 shadow-xs ring-2 ring-amber-400/20"
-                  : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                  ? "bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700 shadow-xs ring-2 ring-amber-400/20"
+                  : "bg-white dark:bg-slate-850 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
               }`}
             >
               I Lost An Item
@@ -298,8 +308,8 @@ function ReportContent() {
               onClick={() => setType("found")}
               className={`py-3 px-4 rounded-lg font-bold text-sm border text-center transition-all ${
                 type === "found"
-                  ? "bg-indigo-50 text-indigo-800 border-indigo-300 shadow-xs ring-2 ring-indigo-400/20"
-                  : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                  ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 border-indigo-300 dark:border-indigo-700 shadow-xs ring-2 ring-indigo-400/20"
+                  : "bg-white dark:bg-slate-850 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
               }`}
             >
               I Found An Item
@@ -307,13 +317,13 @@ function ReportContent() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-2xs space-y-4">
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-2xs space-y-4">
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
             Item Photograph *
           </label>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-            <div className="relative aspect-4/3 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center">
+            <div className="relative aspect-4/3 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center">
               {imageUrl ? (
                 <>
                   <Image
@@ -325,26 +335,26 @@ function ReportContent() {
                   <button
                     type="button"
                     onClick={() => setImageUrl("")}
-                    className="absolute top-2 right-2 p-1 rounded-full bg-slate-900/60 text-white hover:bg-slate-900 transition-colors"
+                    className="absolute top-2 right-2 p-1 rounded-full bg-slate-900/70 text-white hover:bg-slate-900 transition-colors"
                     title="Remove image"
                   >
                     <X className="h-4 w-4" />
                   </button>
                 </>
               ) : (
-                <div className="text-center p-4 text-slate-400 text-xs">
+                <div className="text-center p-4 text-slate-400 dark:text-slate-500 text-xs">
                   No image selected
                 </div>
               )}
             </div>
 
             <div className="space-y-3">
-              <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-200 hover:border-indigo-400 rounded-xl cursor-pointer bg-slate-50/50 hover:bg-slate-50 transition-all text-center">
+              <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 rounded-xl cursor-pointer bg-slate-50/50 dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800/70 transition-all text-center">
                 <UploadCloud className="h-8 w-8 text-indigo-500 mb-2" />
-                <span className="text-xs font-semibold text-slate-800">
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
                   Click to browse or drop photo
                 </span>
-                <span className="text-[10px] text-slate-400 mt-1">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
                   JPEG, PNG, WEBP up to 10MB
                 </span>
                 <input
@@ -357,11 +367,11 @@ function ReportContent() {
 
               {uploadProgress !== null && (
                 <div className="space-y-1">
-                  <div className="flex justify-between text-[11px] text-slate-500">
+                  <div className="flex justify-between text-[11px] text-slate-500 dark:text-slate-400">
                     <span>Uploading photo...</span>
                     <span>{uploadProgress}%</span>
                   </div>
-                  <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 h-1 rounded-full overflow-hidden">
                     <div
                       className="bg-indigo-600 h-full transition-all"
                       style={{ width: `${uploadProgress}%` }}
@@ -370,31 +380,45 @@ function ReportContent() {
                 </div>
               )}
 
-              <p className="text-[11px] text-slate-400 leading-relaxed">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
                 Clear photos enable Amazon Rekognition to extract high-accuracy visual labels.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-2xs space-y-4">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-2xs space-y-4">
           <Input
             label="Item Title *"
             placeholder="e.g. Black Herschel Little America Backpack"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setTitle(val);
+              const detected = inferCategoryFromText(val);
+              if (detected) {
+                setCategory(detected);
+              }
+            }}
             required
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                Category *
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                  Category *
+                </label>
+                {inferCategoryFromText(title) && (
+                  <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold flex items-center gap-1">
+                    <Sparkles className="h-3 w-3" /> Auto-detected
+                  </span>
+                )}
+              </div>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as ItemCategory)}
-                className="w-full h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full h-10 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -446,16 +470,16 @@ function ReportContent() {
           />
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-2xs space-y-4">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-2xs space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
                 Campus Sector / Zone *
               </label>
               <select
                 value={campusZone}
                 onChange={(e) => setCampusZone(e.target.value)}
-                className="w-full h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full h-10 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 {ZONES.map((zone) => (
                   <option key={zone} value={zone}>
@@ -484,14 +508,14 @@ function ReportContent() {
           />
         </div>
 
-        <div className="rounded-xl border border-indigo-100 bg-indigo-50/40 p-5 shadow-2xs space-y-3">
+        <div className="rounded-xl border border-indigo-100 dark:border-indigo-900/60 bg-indigo-50/40 dark:bg-indigo-950/40 p-5 shadow-2xs space-y-3">
           <div className="flex items-start gap-2.5">
-            <Lock className="h-5 w-5 text-indigo-600 shrink-0 mt-0.5" />
+            <Lock className="h-5 w-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-bold text-xs uppercase tracking-wider text-indigo-950">
+              <h3 className="font-bold text-xs uppercase tracking-wider text-indigo-950 dark:text-indigo-200">
                 Private Ownership Verification Clue (Optional)
               </h3>
-              <p className="text-xs text-indigo-900/80 mt-0.5 leading-relaxed">
+              <p className="text-xs text-indigo-900/80 dark:text-indigo-300/80 mt-0.5 leading-relaxed">
                 This detail is <strong>never displayed publicly</strong> on the listing page. Only you and campus security can see it to verify rightful ownership.
               </p>
             </div>

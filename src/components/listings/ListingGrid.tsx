@@ -25,7 +25,7 @@ export const ListingGrid: React.FC<ListingGridProps> = ({
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-xl border border-slate-200/80 bg-white p-4 space-y-3"
+            className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 space-y-3"
           >
             <Skeleton className="aspect-4/3 w-full rounded-lg" />
             <Skeleton className="h-4 w-24" />
@@ -43,14 +43,14 @@ export const ListingGrid: React.FC<ListingGridProps> = ({
 
   if (listings.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-dashed border-slate-200 bg-white">
-        <div className="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-3 border border-slate-100">
+      <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <div className="h-12 w-12 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 mb-3 border border-slate-100 dark:border-slate-700">
           <SearchX className="h-6 w-6" />
         </div>
-        <h3 className="font-semibold text-slate-900 text-base mb-1">
+        <h3 className="font-semibold text-slate-900 dark:text-white text-base mb-1">
           {emptyTitle}
         </h3>
-        <p className="text-xs text-slate-500 max-w-sm mb-6 leading-relaxed">
+        <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mb-6 leading-relaxed">
           {emptyDescription}
         </p>
         <Link href="/report">

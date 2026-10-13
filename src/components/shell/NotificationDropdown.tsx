@@ -93,24 +93,24 @@ export const NotificationDropdown: React.FC = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none"
+        className="relative p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none"
         aria-label="Notifications"
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white ring-2 ring-white animate-pulse-subtle">
+          <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white ring-2 ring-white dark:ring-slate-900 animate-pulse-subtle">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-xl bg-white shadow-xl border border-slate-200/90 z-50 overflow-hidden animate-fade-in">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-slate-50/70">
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-xl bg-white dark:bg-slate-900 shadow-xl border border-slate-200/90 dark:border-slate-800 z-50 overflow-hidden animate-fade-in">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/50">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-sm text-slate-900">Notifications</h3>
+              <h3 className="font-semibold text-sm text-slate-900 dark:text-white">Notifications</h3>
               {unreadCount > 0 && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 font-medium">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 font-medium">
                   {unreadCount} new
                 </span>
               )}
@@ -118,7 +118,7 @@ export const NotificationDropdown: React.FC = () => {
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllRead}
-                className="text-xs text-indigo-600 hover:text-indigo-800 flex items-center gap-1 font-medium transition-colors"
+                className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 flex items-center gap-1 font-medium transition-colors"
               >
                 <CheckCheck className="h-3.5 w-3.5" />
                 Mark all read
@@ -126,9 +126,9 @@ export const NotificationDropdown: React.FC = () => {
             )}
           </div>
 
-          <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">
+          <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
             {notifications.length === 0 ? (
-              <div className="p-8 text-center text-slate-400 text-sm">
+              <div className="p-8 text-center text-slate-400 dark:text-slate-500 text-sm">
                 No notifications right now.
               </div>
             ) : (
@@ -137,37 +137,37 @@ export const NotificationDropdown: React.FC = () => {
                   key={notif.id}
                   href={notif.linkUrl || "#"}
                   onClick={() => handleNotificationClick(notif)}
-                  className={`flex items-start gap-3 p-3.5 transition-colors hover:bg-slate-50 text-left ${
-                    !notif.isRead ? "bg-indigo-50/40" : ""
+                  className={`flex items-start gap-3 p-3.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60 text-left ${
+                    !notif.isRead ? "bg-indigo-50/40 dark:bg-indigo-950/30" : ""
                   }`}
                 >
-                  <div className="mt-0.5 p-1.5 rounded-lg bg-white border border-slate-200/60 shadow-2xs shrink-0">
+                  <div className="mt-0.5 p-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 shadow-2xs shrink-0">
                     {getIconForType(notif.type)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline justify-between gap-2">
-                      <p className={`text-xs font-semibold truncate ${!notif.isRead ? "text-indigo-950 font-bold" : "text-slate-900"}`}>
+                      <p className={`text-xs font-semibold truncate ${!notif.isRead ? "text-indigo-950 dark:text-indigo-200 font-bold" : "text-slate-900 dark:text-slate-200"}`}>
                         {notif.title}
                       </p>
-                      <span className="text-[10px] text-slate-400 shrink-0">
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 shrink-0">
                         {formatRelativeTime(notif.createdAt)}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-600 mt-0.5 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 line-clamp-2 leading-relaxed">
                       {notif.message}
                     </p>
                   </div>
-                  <ChevronRight className="h-4 w-4 text-slate-300 shrink-0 self-center" />
+                  <ChevronRight className="h-4 w-4 text-slate-300 dark:text-slate-600 shrink-0 self-center" />
                 </Link>
               ))
             )}
           </div>
 
-          <div className="p-2.5 bg-slate-50/70 border-t border-slate-100 text-center">
+          <div className="p-2.5 bg-slate-50/70 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 text-center">
             <Link
               href="/matches"
               onClick={() => setIsOpen(false)}
-              className="text-xs font-medium text-indigo-600 hover:text-indigo-800"
+              className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
               View All Smart Matches →
             </Link>

@@ -86,10 +86,10 @@ export const MatchBreakdownModal: React.FC<MatchBreakdownModalProps> = ({
     >
       <div className="space-y-6">
         {/* Top Overview: Side by Side Thumbnails & Score */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
           {/* Lost Item */}
           <div className="flex items-center gap-3">
-            <div className="relative h-16 w-16 rounded-lg overflow-hidden bg-slate-200 shrink-0">
+            <div className="relative h-16 w-16 rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-700 shrink-0">
               <Image
                 src={lost.imageUrl}
                 alt={lost.title}
@@ -98,21 +98,21 @@ export const MatchBreakdownModal: React.FC<MatchBreakdownModalProps> = ({
               />
             </div>
             <div className="min-w-0">
-              <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
                 Lost Item
               </span>
-              <h4 className="text-xs font-semibold text-slate-900 truncate">
+              <h4 className="text-xs font-semibold text-slate-900 dark:text-white truncate">
                 {lost.title}
               </h4>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-slate-600 dark:text-slate-400">
                 {lost.location} • {formatDate(lost.date)}
               </p>
             </div>
           </div>
 
           {/* Found Item */}
-          <div className="flex items-center gap-3 sm:border-l sm:border-slate-200 sm:pl-4">
-            <div className="relative h-16 w-16 rounded-lg overflow-hidden bg-slate-200 shrink-0">
+          <div className="flex items-center gap-3 sm:border-l sm:border-slate-200 dark:sm:border-slate-700 sm:pl-4">
+            <div className="relative h-16 w-16 rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-700 shrink-0">
               <Image
                 src={found.imageUrl}
                 alt={found.title}
@@ -121,13 +121,13 @@ export const MatchBreakdownModal: React.FC<MatchBreakdownModalProps> = ({
               />
             </div>
             <div className="min-w-0">
-              <span className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-indigo-700 dark:text-indigo-400 uppercase tracking-wider">
                 Found Item
               </span>
-              <h4 className="text-xs font-semibold text-slate-900 truncate">
+              <h4 className="text-xs font-semibold text-slate-900 dark:text-white truncate">
                 {found.title}
               </h4>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-slate-600 dark:text-slate-400">
                 {found.location} • {formatDate(found.date)}
               </p>
             </div>
@@ -135,25 +135,25 @@ export const MatchBreakdownModal: React.FC<MatchBreakdownModalProps> = ({
         </div>
 
         {/* Total Score Banner */}
-        <div className="flex items-center justify-between p-4 rounded-xl bg-indigo-50/60 border border-indigo-100">
+        <div className="flex items-center justify-between p-4 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60">
           <ScoreIndicator score={score} strength={strength} />
           <div className="text-right text-xs">
-            <span className="font-semibold text-indigo-950">
+            <span className="font-semibold text-indigo-950 dark:text-indigo-200">
               Candidate Status:
             </span>{" "}
-            <span className="capitalize font-bold text-indigo-700">
+            <span className="capitalize font-bold text-indigo-700 dark:text-indigo-400">
               {candidate.status}
             </span>
           </div>
         </div>
 
         {/* Narrative Summary */}
-        <div className="rounded-xl border border-slate-200 p-4 bg-white">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
-            <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 p-4 bg-white dark:bg-slate-800/40">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5 flex items-center gap-1.5">
+            <Sparkles className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
             Matching Summary
           </h4>
-          <p className="text-xs text-slate-700 leading-relaxed">
+          <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
             {explanation.summary}
           </p>
         </div>
@@ -161,12 +161,12 @@ export const MatchBreakdownModal: React.FC<MatchBreakdownModalProps> = ({
         {/* Supporting Clues & Conflicts */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           {/* Clues */}
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50/30 p-3.5">
-            <h5 className="font-bold text-emerald-800 mb-2 flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+          <div className="rounded-xl border border-emerald-100 dark:border-emerald-900/60 bg-emerald-50/30 dark:bg-emerald-950/30 p-3.5">
+            <h5 className="font-bold text-emerald-800 dark:text-emerald-300 mb-2 flex items-center gap-1.5">
+              <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
               Supporting Clues ({explanation.matchingClues.length})
             </h5>
-            <ul className="space-y-1.5 text-slate-700">
+            <ul className="space-y-1.5 text-slate-700 dark:text-slate-300">
               {explanation.matchingClues.map((clue, idx) => (
                 <li key={idx} className="flex items-start gap-1.5">
                   <span className="text-emerald-500 font-bold">•</span>
@@ -177,12 +177,12 @@ export const MatchBreakdownModal: React.FC<MatchBreakdownModalProps> = ({
           </div>
 
           {/* Conflicting Evidence */}
-          <div className="rounded-xl border border-amber-100 bg-amber-50/30 p-3.5">
-            <h5 className="font-bold text-amber-800 mb-2 flex items-center gap-1.5">
-              <AlertTriangle className="h-4 w-4 text-amber-600" />
+          <div className="rounded-xl border border-amber-100 dark:border-amber-900/60 bg-amber-50/30 dark:bg-amber-950/30 p-3.5">
+            <h5 className="font-bold text-amber-800 dark:text-amber-300 mb-2 flex items-center gap-1.5">
+              <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
               Conflicting / Missing Evidence ({explanation.conflictingEvidence.length})
             </h5>
-            <ul className="space-y-1.5 text-slate-700">
+            <ul className="space-y-1.5 text-slate-700 dark:text-slate-300">
               {explanation.conflictingEvidence.map((conf, idx) => (
                 <li key={idx} className="flex items-start gap-1.5">
                   <span className="text-amber-500 font-bold">•</span>
@@ -195,40 +195,40 @@ export const MatchBreakdownModal: React.FC<MatchBreakdownModalProps> = ({
 
         {/* 6-Factor Weighted Component Breakdown */}
         <div className="space-y-3">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Weighted Score Components
           </h4>
           <div className="space-y-2.5">
             {components.map((c) => (
               <div
                 key={c.name}
-                className="p-3 rounded-lg border border-slate-100 bg-slate-50/50"
+                className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40"
               >
                 <div className="flex items-center justify-between text-xs font-semibold mb-1">
-                  <span className="text-slate-800">
+                  <span className="text-slate-800 dark:text-slate-200">
                     {c.name}{" "}
-                    <span className="text-slate-400 font-normal">
+                    <span className="text-slate-400 dark:text-slate-500 font-normal">
                       (Weight: {c.weight})
                     </span>
                   </span>
-                  <span className="text-slate-900 font-bold">
+                  <span className="text-slate-900 dark:text-white font-bold">
                     {Math.round(c.score)} / 100
                   </span>
                 </div>
-                <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mb-1.5">
+                <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden mb-1.5">
                   <div
                     className="bg-indigo-600 h-full rounded-full transition-all"
                     style={{ width: `${Math.max(4, c.score)}%` }}
                   />
                 </div>
-                <div className="text-[11px] text-slate-500">{c.details}</div>
+                <div className="text-[11px] text-slate-600 dark:text-slate-400">{c.details}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+        <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
           <Button
             variant="outline"
             size="sm"

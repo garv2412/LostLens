@@ -4,6 +4,7 @@ import { DynamoDbService } from "@/lib/aws/dynamodb";
 import { analyzeItemImage } from "@/lib/aws/rekognition";
 import { findMatchesForListing } from "@/lib/matching/engine";
 import { CURRENT_DEMO_USER } from "@/lib/demo/seedData";
+import { inferCategoryFromText } from "@/lib/demo/simulatedRekognition";
 import { Listing } from "@/lib/types/listing";
 
 export async function GET(req: NextRequest) {
@@ -83,9 +84,16 @@ export async function POST(req: NextRequest) {
 
     const input = parsed.data;
 
+    // If default category was kept or mismatched with strong title keywords, smartly align category
+    let resolvedCategory = input.category;
+    const inferred = inferCategoryFromText(input.title);
+    if (inferred && (resolvedCategory === "Bags & Backpacks" || resolvedCategory === "Other")) {
+      resolvedCategory = inferred;
+    }
+
     // Run Rekognition analysis to extract visual labels
     const analysis = await analyzeItemImage({
-      category: input.category,
+      category: resolvedCategory,
       title: input.title,
       color: input.color,
     });
@@ -93,7 +101,7 @@ export async function POST(req: NextRequest) {
     const listingData: Omit<Listing, "id" | "createdAt" | "updatedAt"> = {
       type: input.type,
       title: input.title,
-      category: input.category,
+      category: resolvedCategory,
       description: input.description,
       imageUrl: input.imageUrl,
       color: input.color,

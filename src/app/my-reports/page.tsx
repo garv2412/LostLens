@@ -54,10 +54,10 @@ export default function MyReportsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
             My Submitted Reports
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
             Manage your personal lost and found filings, inspect claim requests, and track recovery.
           </p>
         </div>
@@ -71,26 +71,26 @@ export default function MyReportsPage() {
       </div>
 
       {/* Demo Persona Notification Note */}
-      <div className="rounded-xl border border-indigo-100 bg-indigo-50/60 p-4 flex items-start gap-3">
-        <Shield className="h-5 w-5 text-indigo-600 shrink-0 mt-0.5" />
-        <div className="text-xs text-indigo-900">
+      <div className="rounded-xl border border-indigo-100 dark:border-indigo-900/60 bg-indigo-50/60 dark:bg-indigo-950/40 p-4 flex items-start gap-3">
+        <Shield className="h-5 w-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+        <div className="text-xs text-indigo-900 dark:text-indigo-200">
           <p className="font-semibold mb-0.5">
             Active Identity: {CURRENT_DEMO_USER.name} ({CURRENT_DEMO_USER.department})
           </p>
-          <p className="text-indigo-800/80 leading-relaxed">
+          <p className="text-indigo-800/80 dark:text-indigo-300/80 leading-relaxed">
             In Demo Mode, listings matching this identity are grouped here. In Live AWS Mode with Amazon Cognito, identity is securely verified via university single-sign-on (SSO).
           </p>
         </div>
       </div>
 
       {/* Segment Tabs */}
-      <div className="flex items-center gap-1 bg-white border border-slate-200/80 p-1.5 rounded-xl text-xs w-fit shadow-2xs">
+      <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-1.5 rounded-xl text-xs w-fit shadow-2xs">
         <button
           onClick={() => setActiveTab("all")}
           className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
             activeTab === "all"
               ? "bg-indigo-600 text-white shadow-xs"
-              : "text-slate-600 hover:text-slate-900"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
           }`}
         >
           All Reports ({myListings.length})
@@ -100,7 +100,7 @@ export default function MyReportsPage() {
           className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
             activeTab === "lost"
               ? "bg-amber-600 text-white shadow-xs"
-              : "text-slate-600 hover:text-slate-900"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
           }`}
         >
           My Lost Items ({lostCount})
@@ -110,7 +110,7 @@ export default function MyReportsPage() {
           className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
             activeTab === "found"
               ? "bg-indigo-600 text-white shadow-xs"
-              : "text-slate-600 hover:text-slate-900"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
           }`}
         >
           My Found Items ({foundCount})
@@ -119,14 +119,14 @@ export default function MyReportsPage() {
 
       {/* Grid of Listings */}
       {displayedListings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-dashed border-slate-200 bg-white">
-          <div className="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-3 border border-slate-100">
+        <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <div className="h-12 w-12 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 mb-3 border border-slate-100 dark:border-slate-700">
             <FolderHeart className="h-6 w-6" />
           </div>
-          <h3 className="font-semibold text-slate-900 text-base mb-1">
+          <h3 className="font-semibold text-slate-900 dark:text-white text-base mb-1">
             No reports in this category
           </h3>
-          <p className="text-xs text-slate-500 max-w-sm mb-4">
+          <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mb-4">
             You haven&apos;t filed any items in this tab yet.
           </p>
           <Link href="/report">

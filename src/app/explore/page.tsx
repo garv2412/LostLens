@@ -109,10 +109,10 @@ function ExploreContent() {
   return (
     <div className="space-y-6 pb-12">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
           Explore Campus Listings
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
           Browse, filter, and search through verified lost reports and turned-in items.
         </p>
       </div>
@@ -124,9 +124,9 @@ function ExploreContent() {
         zones={ZONES}
       />
 
-      <div className="flex items-center justify-between text-xs text-slate-500 px-1">
+      <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
         <span>
-          Showing <strong className="text-slate-900">{filteredListings.length}</strong> of{" "}
+          Showing <strong className="text-slate-900 dark:text-white">{filteredListings.length}</strong> of{" "}
           {allListings.length} listings
         </span>
       </div>

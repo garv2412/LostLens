@@ -68,23 +68,23 @@ export function getScoreBadgeClass(score: number): {
 } {
   if (score >= 75) {
     return {
-      badge: "bg-emerald-50 text-emerald-700 border-emerald-200",
-      text: "text-emerald-700",
+      badge: "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60",
+      text: "text-emerald-700 dark:text-emerald-400",
       bg: "bg-emerald-500",
       border: "border-emerald-500",
     };
   }
   if (score >= 45) {
     return {
-      badge: "bg-indigo-50 text-indigo-700 border-indigo-200",
-      text: "text-indigo-700",
+      badge: "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/60",
+      text: "text-indigo-700 dark:text-indigo-400",
       bg: "bg-indigo-500",
       border: "border-indigo-500",
     };
   }
   return {
-    badge: "bg-amber-50 text-amber-700 border-amber-200",
-    text: "text-amber-700",
+    badge: "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/60",
+    text: "text-amber-700 dark:text-amber-400",
     bg: "bg-amber-500",
     border: "border-amber-500",
   };

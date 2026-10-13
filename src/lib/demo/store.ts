@@ -19,6 +19,10 @@ const STORAGE_KEYS = {
 };
 
 export class DemoStore {
+  private static serverListings: Listing[] = [...INITIAL_LISTINGS];
+  private static serverClaims: Claim[] = [...INITIAL_CLAIMS];
+  private static serverNotifications: AppNotification[] = [...INITIAL_NOTIFICATIONS];
+
   private static isBrowser(): boolean {
     return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
   }
@@ -26,24 +30,72 @@ export class DemoStore {
   // --- LISTINGS ---
 
   public static getListings(): Listing[] {
+    let list: Listing[];
     if (!this.isBrowser()) {
-      return [...INITIAL_LISTINGS];
+      list = [...this.serverListings];
+    } else {
+      const raw = localStorage.getItem(STORAGE_KEYS.LISTINGS);
+      if (!raw) {
+        localStorage.setItem(STORAGE_KEYS.LISTINGS, JSON.stringify(INITIAL_LISTINGS));
+        list = [...INITIAL_LISTINGS];
+      } else {
+        try {
+          list = JSON.parse(raw);
+        } catch {
+          list = [...INITIAL_LISTINGS];
+        }
+      }
     }
-    const raw = localStorage.getItem(STORAGE_KEYS.LISTINGS);
-    if (!raw) {
-      localStorage.setItem(STORAGE_KEYS.LISTINGS, JSON.stringify(INITIAL_LISTINGS));
-      return [...INITIAL_LISTINGS];
+
+    // Auto-heal any mismatched labels in case user previously filed with default category
+    let mutated = false;
+    list = list.map((l) => {
+      if (l.title.toLowerCase().includes("sunglass") && l.detectedLabels.some((lbl) => lbl.name === "Backpack")) {
+        mutated = true;
+        return {
+          ...l,
+          category: "Eyewear & Glasses",
+          detectedLabels: [
+            { name: "Sunglasses", confidence: 99.5, isSimulated: true },
+            { name: "Glasses", confidence: 96.8, isSimulated: true },
+            { name: "Eyewear", confidence: 93.9, isSimulated: true },
+            { name: "Optical Instrument", confidence: 91.0, isSimulated: true },
+            { name: l.color ? (l.color.charAt(0).toUpperCase() + l.color.slice(1)) : "Black", confidence: 88.5, isSimulated: true },
+          ],
+        };
+      }
+      return l;
+    });
+
+    if (mutated && this.isBrowser()) {
+      localStorage.setItem(STORAGE_KEYS.LISTINGS, JSON.stringify(list));
     }
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return [...INITIAL_LISTINGS];
-    }
+
+    return list;
   }
 
   public static getListingById(id: string): Listing | undefined {
     const all = this.getListings();
     return all.find((l) => l.id === id);
+  }
+
+  public static saveListing(listing: Listing): void {
+    const all = this.getListings();
+    const idx = all.findIndex((l) => l.id === listing.id);
+    let updated: Listing[];
+    if (idx >= 0) {
+      all[idx] = listing;
+      updated = [...all];
+    } else {
+      updated = [listing, ...all];
+    }
+
+    this.serverListings = updated;
+    if (this.isBrowser()) {
+      localStorage.setItem(STORAGE_KEYS.LISTINGS, JSON.stringify(updated));
+    }
+
+    this.processNewListingMatches(listing);
   }
 
   public static createListing(data: Omit<Listing, "id" | "createdAt" | "updatedAt">): Listing {
@@ -59,6 +111,7 @@ export class DemoStore {
     };
 
     const updated = [newListing, ...all];
+    this.serverListings = updated;
     if (this.isBrowser()) {
       localStorage.setItem(STORAGE_KEYS.LISTINGS, JSON.stringify(updated));
     }
@@ -80,10 +133,29 @@ export class DemoStore {
       updatedAt: new Date().toISOString(),
     };
 
+    this.serverListings = all;
     if (this.isBrowser()) {
       localStorage.setItem(STORAGE_KEYS.LISTINGS, JSON.stringify(all));
     }
     return all[idx];
+  }
+
+  public static deleteListing(id: string): boolean {
+    const all = this.getListings();
+    const filtered = all.filter((l) => l.id !== id);
+    if (filtered.length === all.length) return false;
+
+    this.serverListings = filtered;
+    if (this.isBrowser()) {
+      localStorage.setItem(STORAGE_KEYS.LISTINGS, JSON.stringify(filtered));
+
+      // Also clean up any claims filed for this listing
+      const allClaims = this.getClaims();
+      const filteredClaims = allClaims.filter((c) => c.listingId !== id);
+      this.serverClaims = filteredClaims;
+      localStorage.setItem(STORAGE_KEYS.CLAIMS, JSON.stringify(filteredClaims));
+    }
+    return true;
   }
 
   // --- MATCHES ---
@@ -135,7 +207,7 @@ export class DemoStore {
 
   public static getClaims(): Claim[] {
     if (!this.isBrowser()) {
-      return [...INITIAL_CLAIMS];
+      return [...this.serverClaims];
     }
     const raw = localStorage.getItem(STORAGE_KEYS.CLAIMS);
     if (!raw) {
@@ -151,6 +223,23 @@ export class DemoStore {
 
   public static getClaimsForListing(listingId: string): Claim[] {
     return this.getClaims().filter((c) => c.listingId === listingId);
+  }
+
+  public static saveClaim(claim: Claim): void {
+    const all = this.getClaims();
+    const idx = all.findIndex((c) => c.id === claim.id);
+    let updated: Claim[];
+    if (idx >= 0) {
+      all[idx] = claim;
+      updated = [...all];
+    } else {
+      updated = [claim, ...all];
+    }
+
+    this.serverClaims = updated;
+    if (this.isBrowser()) {
+      localStorage.setItem(STORAGE_KEYS.CLAIMS, JSON.stringify(updated));
+    }
   }
 
   public static createClaim(
@@ -177,6 +266,7 @@ export class DemoStore {
     };
 
     const updated = [newClaim, ...all];
+    this.serverClaims = updated;
     if (this.isBrowser()) {
       localStorage.setItem(STORAGE_KEYS.CLAIMS, JSON.stringify(updated));
     }
@@ -217,6 +307,7 @@ export class DemoStore {
       resolvedAt: status === "accepted" || status === "rejected" ? timestamp : undefined,
     };
 
+    this.serverClaims = all;
     if (this.isBrowser()) {
       localStorage.setItem(STORAGE_KEYS.CLAIMS, JSON.stringify(all));
     }
@@ -381,6 +472,9 @@ export class DemoStore {
   // --- RESET DEMO ---
 
   public static resetDemoData(): void {
+    this.serverListings = [...INITIAL_LISTINGS];
+    this.serverClaims = [...INITIAL_CLAIMS];
+    this.serverNotifications = [...INITIAL_NOTIFICATIONS];
     if (!this.isBrowser()) return;
     localStorage.setItem(STORAGE_KEYS.LISTINGS, JSON.stringify(INITIAL_LISTINGS));
     localStorage.setItem(STORAGE_KEYS.CLAIMS, JSON.stringify(INITIAL_CLAIMS));

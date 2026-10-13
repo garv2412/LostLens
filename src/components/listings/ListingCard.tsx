@@ -15,10 +15,10 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing, matchScore })
   return (
     <Link
       href={`/listings/${listing.id}`}
-      className="group flex flex-col rounded-xl border border-slate-200/80 bg-white shadow-2xs hover:shadow-md hover:border-slate-300 transition-all duration-200 overflow-hidden"
+      className="group flex flex-col rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 overflow-hidden"
     >
       {/* Image Preview Container */}
-      <div className="relative aspect-4/3 w-full bg-slate-100 overflow-hidden">
+      <div className="relative aspect-4/3 w-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
         {listing.imageUrl ? (
           <Image
             src={listing.imageUrl}
@@ -28,7 +28,7 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing, matchScore })
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-slate-300">
+          <div className="flex h-full w-full items-center justify-center text-slate-400 dark:text-slate-600">
             No image available
           </div>
         )}
@@ -40,7 +40,7 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing, matchScore })
         </div>
 
         {matchScore !== undefined && (
-          <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-600/90 text-white text-[11px] font-bold backdrop-blur-xs shadow-sm">
+          <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-600/90 dark:bg-indigo-600 text-white text-[11px] font-bold backdrop-blur-sm shadow-sm">
             <Sparkles className="h-3 w-3" />
             <span>{Math.round(matchScore)}%</span>
           </div>
@@ -49,16 +49,16 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing, matchScore })
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-4">
-        <div className="flex items-center gap-1.5 text-xs text-indigo-600 font-semibold mb-1">
+        <div className="flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-1">
           <Tag className="h-3.5 w-3.5" />
           <span>{listing.category}</span>
         </div>
 
-        <h3 className="font-semibold text-sm text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1 mb-1.5">
+        <h3 className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1 mb-1.5">
           {listing.title}
         </h3>
 
-        <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed">
+        <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 mb-3 leading-relaxed">
           {listing.description}
         </p>
 
@@ -68,7 +68,7 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing, matchScore })
             {listing.detectedLabels.slice(0, 3).map((lbl) => (
               <span
                 key={lbl.name}
-                className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium"
+                className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700 font-medium"
               >
                 {lbl.name}
               </span>
@@ -77,13 +77,13 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing, matchScore })
         )}
 
         {/* Footer Metadata */}
-        <div className="mt-auto pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+        <div className="mt-auto pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-1 truncate max-w-[60%]">
-            <MapPin className="h-3 w-3 text-slate-400 shrink-0" />
+            <MapPin className="h-3 w-3 text-slate-400 dark:text-slate-500 shrink-0" />
             <span className="truncate">{listing.location}</span>
           </div>
           <div className="flex items-center gap-1 shrink-0">
-            <Calendar className="h-3 w-3 text-slate-400" />
+            <Calendar className="h-3 w-3 text-slate-400 dark:text-slate-500" />
             <span>{formatDate(listing.date)}</span>
           </div>
         </div>

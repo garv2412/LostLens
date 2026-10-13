@@ -50,7 +50,7 @@ export const ScoreIndicator: React.FC<ScoreIndicatorProps> = ({
         <div className={`text-xs font-bold ${color.text}`}>
           {strengthLabels[strength]}
         </div>
-        <div className="text-[11px] text-slate-500 mt-0.5">
+        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
           {strength === "strong"
             ? "High attribute alignment"
             : strength === "possible"

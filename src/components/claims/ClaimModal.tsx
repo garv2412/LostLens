@@ -8,6 +8,7 @@ import { Button } from "../ui/Button";
 import { Textarea } from "../ui/Input";
 import { Input } from "../ui/Input";
 import { CURRENT_DEMO_USER } from "@/lib/demo/seedData";
+import { DemoStore } from "@/lib/demo/store";
 
 export interface ClaimModalProps {
   listing: Listing;
@@ -55,6 +56,10 @@ export const ClaimModal: React.FC<ClaimModalProps> = ({
 
       const json = await res.json();
       if (json.success) {
+        if (json.data) {
+          DemoStore.saveClaim(json.data);
+          DemoStore.updateListingStatus(listing.id, "in_claim");
+        }
         setSubmitted(true);
         onSuccess();
       } else {
@@ -89,12 +94,12 @@ export const ClaimModal: React.FC<ClaimModalProps> = ({
     >
       {submitted ? (
         <div className="space-y-4 py-2">
-          <div className="flex flex-col items-center justify-center p-6 text-center rounded-xl bg-emerald-50 border border-emerald-100">
-            <CheckCircle2 className="h-12 w-12 text-emerald-600 mb-2" />
-            <h4 className="font-bold text-slate-900 text-sm">
+          <div className="flex flex-col items-center justify-center p-6 text-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60">
+            <CheckCircle2 className="h-12 w-12 text-emerald-600 dark:text-emerald-400 mb-2" />
+            <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm">
               Verification Request Sent
             </h4>
-            <p className="text-xs text-slate-600 mt-1 max-w-xs leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-xs leading-relaxed">
               We notified the finder. Once they review your distinguishing details, you will receive an in-app alert with return instructions.
             </p>
           </div>
@@ -106,8 +111,8 @@ export const ClaimModal: React.FC<ClaimModalProps> = ({
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="rounded-lg bg-indigo-50/70 p-3 border border-indigo-100 flex items-start gap-2.5 text-xs text-indigo-900">
-            <Lock className="h-4 w-4 text-indigo-600 shrink-0 mt-0.5" />
+          <div className="rounded-lg bg-indigo-50/70 dark:bg-indigo-950/40 p-3 border border-indigo-100 dark:border-indigo-900/60 flex items-start gap-2.5 text-xs text-indigo-900 dark:text-indigo-200">
+            <Lock className="h-4 w-4 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
             <p>
               Your answers are <strong>private</strong> and visible only to the listing reporter and campus security to prevent fraudulent claims.
             </p>
@@ -134,7 +139,7 @@ export const ClaimModal: React.FC<ClaimModalProps> = ({
             />
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+          <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
             <Button
               type="button"
               variant="ghost"

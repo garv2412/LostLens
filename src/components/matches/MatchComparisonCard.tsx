@@ -38,18 +38,18 @@ export const MatchComparisonCard: React.FC<MatchComparisonCardProps> = ({
   if (!lost || !found) return null;
 
   return (
-    <div className="rounded-xl border border-slate-200/90 bg-white shadow-2xs hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col">
+    <div className="rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col">
       {/* Top Bar: Match Score & Status */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+      <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 dark:bg-slate-800/40">
         <ScoreIndicator score={score} strength={strength} />
         <div className="flex items-center gap-2">
           {status === "confirmed" && (
-            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 flex items-center gap-1">
               <Check className="h-3 w-3" /> Confirmed
             </span>
           )}
           {status === "dismissed" && (
-            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-500 border border-slate-200 flex items-center gap-1">
+            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 flex items-center gap-1">
               <X className="h-3 w-3" /> Dismissed
             </span>
           )}
@@ -57,7 +57,7 @@ export const MatchComparisonCard: React.FC<MatchComparisonCardProps> = ({
             variant="outline"
             size="sm"
             onClick={() => onInspect(candidate)}
-            className="text-xs gap-1.5 h-8 font-semibold text-indigo-700 border-indigo-200 hover:bg-indigo-50"
+            className="text-xs gap-1.5 h-8 font-semibold text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/60"
           >
             <Eye className="h-3.5 w-3.5" />
             <span>Inspect Evidence</span>
@@ -66,17 +66,17 @@ export const MatchComparisonCard: React.FC<MatchComparisonCardProps> = ({
       </div>
 
       {/* Side-by-Side Comparison Container */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 p-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 dark:divide-slate-800 p-4 gap-4 sm:gap-6">
         {/* Left: Lost Item */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider px-2 py-0.5 rounded bg-amber-50 border border-amber-100">
+            <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300 uppercase tracking-wider px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/50 border border-amber-100 dark:border-amber-800/60">
               Lost Report
             </span>
-            <span className="text-xs text-slate-400 font-mono">#{lost.id.slice(-6)}</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">#{lost.id.slice(-6)}</span>
           </div>
 
-          <div className="relative aspect-16/10 w-full rounded-lg overflow-hidden bg-slate-100">
+          <div className="relative aspect-16/10 w-full rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
             <Image
               src={lost.imageUrl}
               alt={lost.title}
@@ -88,16 +88,16 @@ export const MatchComparisonCard: React.FC<MatchComparisonCardProps> = ({
           <div>
             <Link
               href={`/listings/${lost.id}`}
-              className="font-semibold text-sm text-slate-900 hover:text-indigo-600 transition-colors line-clamp-1"
+              className="font-semibold text-sm text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors line-clamp-1"
             >
               {lost.title}
             </Link>
-            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mt-1">
-              <span>Color: <strong className="text-slate-700">{lost.color}</strong></span>
+            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-400 mt-1">
+              <span>Color: <strong className="text-slate-800 dark:text-slate-200">{lost.color}</strong></span>
               <span>•</span>
-              <span>Zone: <strong className="text-slate-700">{lost.campusZone}</strong></span>
+              <span>Zone: <strong className="text-slate-800 dark:text-slate-200">{lost.campusZone}</strong></span>
             </div>
-            <div className="flex items-center gap-1 text-[11px] text-slate-400 mt-1.5">
+            <div className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">
               <Calendar className="h-3 w-3" />
               <span>Lost on {formatDate(lost.date)}</span>
             </div>
@@ -107,13 +107,13 @@ export const MatchComparisonCard: React.FC<MatchComparisonCardProps> = ({
         {/* Right: Found Item */}
         <div className="space-y-3 sm:pl-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-50 border border-indigo-100">
+            <span className="text-[10px] font-bold text-indigo-700 dark:text-indigo-300 uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-800/60">
               Found Listing
             </span>
-            <span className="text-xs text-slate-400 font-mono">#{found.id.slice(-6)}</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">#{found.id.slice(-6)}</span>
           </div>
 
-          <div className="relative aspect-16/10 w-full rounded-lg overflow-hidden bg-slate-100">
+          <div className="relative aspect-16/10 w-full rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
             <Image
               src={found.imageUrl}
               alt={found.title}
@@ -125,16 +125,16 @@ export const MatchComparisonCard: React.FC<MatchComparisonCardProps> = ({
           <div>
             <Link
               href={`/listings/${found.id}`}
-              className="font-semibold text-sm text-slate-900 hover:text-indigo-600 transition-colors line-clamp-1"
+              className="font-semibold text-sm text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors line-clamp-1"
             >
               {found.title}
             </Link>
-            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mt-1">
-              <span>Color: <strong className="text-slate-700">{found.color}</strong></span>
+            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-400 mt-1">
+              <span>Color: <strong className="text-slate-800 dark:text-slate-200">{found.color}</strong></span>
               <span>•</span>
-              <span>Zone: <strong className="text-slate-700">{found.campusZone}</strong></span>
+              <span>Zone: <strong className="text-slate-800 dark:text-slate-200">{found.campusZone}</strong></span>
             </div>
-            <div className="flex items-center gap-1 text-[11px] text-slate-400 mt-1.5">
+            <div className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">
               <Calendar className="h-3 w-3" />
               <span>Found on {formatDate(found.date)}</span>
             </div>
@@ -143,9 +143,9 @@ export const MatchComparisonCard: React.FC<MatchComparisonCardProps> = ({
       </div>
 
       {/* AI Explanation Snippet */}
-      <div className="px-4 py-3 bg-slate-50/80 border-t border-slate-100 text-xs">
-        <p className="text-slate-700 line-clamp-2 leading-relaxed">
-          <span className="font-semibold text-slate-900">Analysis: </span>
+      <div className="px-4 py-3 bg-slate-50/80 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800 text-xs">
+        <p className="text-slate-700 dark:text-slate-300 line-clamp-2 leading-relaxed">
+          <span className="font-semibold text-slate-900 dark:text-white">Analysis: </span>
           {explanation.summary}
         </p>
 
@@ -155,9 +155,9 @@ export const MatchComparisonCard: React.FC<MatchComparisonCardProps> = ({
             {explanation.matchingClues.slice(0, 2).map((clue, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-100"
+                className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-800/60"
               >
-                <CheckCircle2 className="h-2.5 w-2.5 text-emerald-600" />
+                <CheckCircle2 className="h-2.5 w-2.5 text-emerald-600 dark:text-emerald-400" />
                 <span>{clue}</span>
               </span>
             ))}
@@ -166,12 +166,12 @@ export const MatchComparisonCard: React.FC<MatchComparisonCardProps> = ({
       </div>
 
       {/* Bottom Actions */}
-      <div className="mt-auto px-4 py-3 border-t border-slate-100 flex items-center justify-between text-xs">
+      <div className="mt-auto px-4 py-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
         <div className="flex items-center gap-2">
           {onDismiss && status !== "dismissed" && (
             <button
               onClick={() => onDismiss(candidate.id)}
-              className="text-slate-500 hover:text-slate-800 font-medium py-1 px-2 rounded hover:bg-slate-100 transition-colors"
+              className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium py-1 px-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               Dismiss
             </button>
@@ -179,7 +179,7 @@ export const MatchComparisonCard: React.FC<MatchComparisonCardProps> = ({
           {onConfirm && status !== "confirmed" && (
             <button
               onClick={() => onConfirm(candidate.id)}
-              className="text-emerald-700 hover:text-emerald-900 font-semibold py-1 px-2.5 rounded bg-emerald-50 hover:bg-emerald-100 transition-colors"
+              className="text-emerald-700 dark:text-emerald-300 hover:text-emerald-900 dark:hover:text-emerald-100 font-semibold py-1 px-2.5 rounded bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors"
             >
               Confirm Match
             </button>
@@ -188,7 +188,7 @@ export const MatchComparisonCard: React.FC<MatchComparisonCardProps> = ({
 
         <Link
           href={`/listings/${found.id}`}
-          className="font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 transition-colors"
+          className="font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 flex items-center gap-1 transition-colors"
         >
           <span>Open Found Item</span>
           <ArrowRight className="h-3.5 w-3.5" />

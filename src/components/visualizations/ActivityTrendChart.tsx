@@ -11,6 +11,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import { useTheme } from "../theme/ThemeProvider";
+
 export interface ActivityTrendProps {
   data?: { date: string; lost: number; found: number; recovered: number }[];
 }
@@ -31,6 +33,16 @@ const DEFAULT_DATA = [
 export const ActivityTrendChart: React.FC<ActivityTrendProps> = ({
   data = DEFAULT_DATA,
 }) => {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
+  const gridStroke = isDark ? "#1e293b" : "#f1f5f9";
+  const tickColor = isDark ? "#94a3b8" : "#64748b";
+  const axisStroke = isDark ? "#334155" : "#e2e8f0";
+  const tooltipBg = isDark ? "#0f172a" : "#ffffff";
+  const tooltipBorder = isDark ? "#334155" : "#e2e8f0";
+  const tooltipColor = isDark ? "#f8fafc" : "#0f172a";
+
   return (
     <div className="w-full h-64">
       <ResponsiveContainer width="100%" height="100%">
@@ -52,25 +64,26 @@ export const ActivityTrendChart: React.FC<ActivityTrendProps> = ({
               <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridStroke} />
           <XAxis
             dataKey="date"
-            tick={{ fontSize: 11, fill: "#64748b" }}
-            axisLine={{ stroke: "#e2e8f0" }}
+            tick={{ fontSize: 11, fill: tickColor }}
+            axisLine={{ stroke: axisStroke }}
             tickLine={false}
           />
           <YAxis
-            tick={{ fontSize: 11, fill: "#64748b" }}
+            tick={{ fontSize: 11, fill: tickColor }}
             axisLine={false}
             tickLine={false}
             allowDecimals={false}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "#ffffff",
+              backgroundColor: tooltipBg,
+              color: tooltipColor,
               borderRadius: "0.75rem",
-              border: "1px solid #e2e8f0",
-              boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+              border: `1px solid ${tooltipBorder}`,
+              boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.2)",
               fontSize: "12px",
             }}
           />

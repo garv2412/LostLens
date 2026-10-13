@@ -21,7 +21,7 @@ export const ListingStatusBadge: React.FC<{ status: ListingStatus }> = ({ status
   switch (status) {
     case "active":
       return (
-        <Badge variant="default" className="text-slate-600 bg-slate-100 border-slate-200">
+        <Badge variant="default" className="text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700">
           Active
         </Badge>
       );
@@ -39,7 +39,7 @@ export const ListingStatusBadge: React.FC<{ status: ListingStatus }> = ({ status
       );
     case "closed":
       return (
-        <Badge variant="outline" className="text-slate-400">
+        <Badge variant="outline" className="text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700">
           Closed
         </Badge>
       );

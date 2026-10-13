@@ -71,3 +71,25 @@ export async function PATCH(
     return NextResponse.json({ success: false, error: msg }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const success = await DynamoDbService.deleteListing(params.id);
+    if (!success) {
+      return NextResponse.json(
+        { success: false, error: "Listing not found or could not be deleted" },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json({
+      success: true,
+      message: "Listing deleted successfully",
+    });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Failed to delete listing";
+    return NextResponse.json({ success: false, error: msg }, { status: 500 });
+  }
+}

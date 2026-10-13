@@ -4,6 +4,7 @@ import {
   ScanCommand,
   UpdateCommand,
   QueryCommand,
+  DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { getDynamoDocClient, isLiveMode } from "./config";
 import { Listing, ListingStatus } from "../types/listing";
@@ -116,6 +117,26 @@ export class DynamoDbService {
       return response.Attributes as Listing;
     } catch {
       return DemoStore.updateListingStatus(id, status);
+    }
+  }
+
+  public static async deleteListing(id: string): Promise<boolean> {
+    if (!isLiveMode()) {
+      return DemoStore.deleteListing(id);
+    }
+
+    try {
+      const client = getDynamoDocClient();
+      await client.send(
+        new DeleteCommand({
+          TableName: TABLES.LISTINGS,
+          Key: { id },
+        })
+      );
+      DemoStore.deleteListing(id);
+      return true;
+    } catch {
+      return DemoStore.deleteListing(id);
     }
   }
 

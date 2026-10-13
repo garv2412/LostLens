@@ -26,17 +26,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantStyles = {
       primary:
-        "bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm shadow-indigo-200",
+        "bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm shadow-indigo-500/20 active:bg-indigo-800",
       secondary:
-        "bg-slate-900 text-white hover:bg-slate-800 shadow-sm",
+        "bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 shadow-sm",
       outline:
-        "border border-slate-200 bg-white text-slate-800 hover:bg-slate-50 hover:border-slate-300",
+        "border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600",
       ghost:
-        "text-slate-600 hover:text-slate-900 hover:bg-slate-100",
+        "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800",
       destructive:
-        "bg-rose-600 text-white hover:bg-rose-700 shadow-sm shadow-rose-200",
+        "bg-rose-600 text-white hover:bg-rose-700 shadow-sm shadow-rose-500/20",
       subtle:
-        "bg-indigo-50 text-indigo-700 hover:bg-indigo-100",
+        "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/60",
     };
 
     const sizeStyles = {

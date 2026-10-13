@@ -54,10 +54,10 @@ export default function DashboardPage() {
       {/* Top Banner: Greeting & Quick Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
             Campus Recovery Dashboard
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
             Real-time overview of lost reports, turned-in items, and AI match candidates.
           </p>
         </div>
@@ -65,7 +65,7 @@ export default function DashboardPage() {
         <div className="flex items-center gap-2.5">
           <Link href="/report?type=lost">
             <Button variant="outline" size="sm" className="gap-1.5 font-semibold">
-              <PlusCircle className="h-4 w-4 text-amber-600" />
+              <PlusCircle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
               <span>Report Lost</span>
             </Button>
           </Link>
@@ -80,64 +80,64 @@ export default function DashboardPage() {
 
       {/* KPI Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <div className="p-4 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+        <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-2xs hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1">
             Active Listings
           </span>
-          <div className="text-2xl font-black text-slate-900">
+          <div className="text-2xl font-black text-slate-900 dark:text-white">
             {stats ? stats.totalListings - stats.recoveredCount : "..."}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">
+          <div className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
             Across 5 campus sectors
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+        <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-2xs hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1">
             Lost Reports
           </span>
-          <div className="text-2xl font-black text-amber-600">
+          <div className="text-2xl font-black text-amber-600 dark:text-amber-400">
             {stats ? stats.lostCount : "..."}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">
+          <div className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
             Awaiting discovery
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+        <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-2xs hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1">
             Found Items
           </span>
-          <div className="text-2xl font-black text-indigo-600">
+          <div className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
             {stats ? stats.foundCount : "..."}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">
+          <div className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
             Turned in to desks
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+        <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-2xs hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1">
             Potential Matches
           </span>
-          <div className="text-2xl font-black text-indigo-900 flex items-center gap-1.5">
+          <div className="text-2xl font-black text-indigo-900 dark:text-indigo-300 flex items-center gap-1.5">
             <span>{stats ? stats.activeMatches : "..."}</span>
-            <Sparkles className="h-4 w-4 text-indigo-500" />
+            <Sparkles className="h-4 w-4 text-indigo-500 dark:text-indigo-400" />
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">
+          <div className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
             Candidate rankings ready
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-white border border-slate-200/80 shadow-2xs col-span-2 lg:col-span-1">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+        <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-2xs col-span-2 lg:col-span-1 hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1">
             Recovered Rate
           </span>
-          <div className="text-2xl font-black text-emerald-600 flex items-center gap-1.5">
+          <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
             <span>{stats ? `${stats.resolutionRate}%` : "..."}</span>
-            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+            <CheckCircle2 className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">
+          <div className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
             {stats ? `${stats.recoveredCount} items returned` : ""}
           </div>
         </div>
@@ -146,17 +146,17 @@ export default function DashboardPage() {
       {/* Main Row: Activity Chart & Recent High-Quality Matches */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Trend Area Chart (2 cols on lg) */}
-        <div className="lg:col-span-2 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-4">
+        <div className="lg:col-span-2 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-2xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-bold text-sm text-slate-900">
+              <h2 className="font-bold text-sm text-slate-900 dark:text-white">
                 Reporting & Recovery Trajectory
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                 Daily volume of lost reports, found items, and verified returns
               </p>
             </div>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700">
               Last 10 Days
             </span>
           </div>
@@ -165,19 +165,19 @@ export default function DashboardPage() {
         </div>
 
         {/* Top AI Matches (1 col on lg) */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-4 flex flex-col">
+        <div className="rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-2xs space-y-4 flex flex-col">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-bold text-sm text-slate-900">
+              <h2 className="font-bold text-sm text-slate-900 dark:text-white">
                 Top AI Candidates
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                 Highest ranked potential matches
               </p>
             </div>
             <Link
               href="/matches"
-              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800"
+              className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
               View all
             </Link>
@@ -185,7 +185,7 @@ export default function DashboardPage() {
 
           <div className="flex-1 space-y-3">
             {topMatches.length === 0 ? (
-              <div className="p-6 text-center text-slate-400 text-xs">
+              <div className="p-6 text-center text-slate-400 dark:text-slate-500 text-xs">
                 No candidate matches above threshold yet.
               </div>
             ) : (
@@ -193,13 +193,13 @@ export default function DashboardPage() {
                 <Link
                   key={match.id}
                   href={`/matches?inspect=${match.id}`}
-                  className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/60 hover:bg-indigo-50/40 hover:border-indigo-100 transition-colors"
+                  className="flex items-center justify-between p-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 hover:bg-indigo-50/40 dark:hover:bg-indigo-950/30 hover:border-indigo-100 dark:hover:border-indigo-900/60 transition-colors"
                 >
                   <div className="min-w-0 pr-2">
-                    <h4 className="text-xs font-bold text-slate-900 truncate">
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
                       {match.lostListing?.title}
                     </h4>
-                    <p className="text-[11px] text-slate-500 truncate mt-0.5">
+                    <p className="text-[11px] text-slate-600 dark:text-slate-400 truncate mt-0.5">
                       ↔ {match.foundListing?.title}
                     </p>
                   </div>
@@ -223,16 +223,16 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-bold text-base text-slate-900">
+              <h2 className="font-bold text-base text-slate-900 dark:text-white">
                 Recently Submitted Listings
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                 Latest reports added across campus
               </p>
             </div>
             <Link
               href="/explore"
-              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+              className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 flex items-center gap-1"
             >
               <span>Explore all {stats?.totalListings}</span>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -247,12 +247,12 @@ export default function DashboardPage() {
         </div>
 
         {/* System Activity Feed (1 col) */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs space-y-4 flex flex-col">
+        <div className="rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-2xs space-y-4 flex flex-col">
           <div>
-            <h2 className="font-bold text-sm text-slate-900">
+            <h2 className="font-bold text-sm text-slate-900 dark:text-white">
               Recent System Activity
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
               Notifications & recovery state changes
             </p>
           </div>
@@ -261,17 +261,17 @@ export default function DashboardPage() {
             {recentActivity.map((notif) => (
               <div
                 key={notif.id}
-                className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 text-xs space-y-1"
+                className="p-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-xs space-y-1"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-slate-900 truncate max-w-[70%]">
+                  <span className="font-bold text-slate-900 dark:text-white truncate max-w-[70%]">
                     {notif.title}
                   </span>
-                  <span className="text-[10px] text-slate-400">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">
                     {formatRelativeTime(notif.createdAt)}
                   </span>
                 </div>
-                <p className="text-slate-600 text-[11px] leading-relaxed line-clamp-2">
+                <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed line-clamp-2">
                   {notif.message}
                 </p>
               </div>
