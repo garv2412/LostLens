@@ -46,7 +46,26 @@ export default function ListingDetailPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadData = () => {
+  const loadData = async () => {
+    try {
+      const res = await fetch(`/api/listings/${id}`);
+      const json = await res.json();
+      if (json.success && json.data) {
+        setListing(json.data);
+        const allMatches = DemoStore.getAllMatches();
+        const related = allMatches.filter(
+          (m) => m.lostListingId === json.data.id || m.foundListingId === json.data.id
+        );
+        setMatches(related);
+        const itemClaims = DemoStore.getClaimsForListing(json.data.id);
+        setClaims(itemClaims);
+        setIsLoading(false);
+        return;
+      }
+    } catch {
+      // pass
+    }
+
     try {
       const item = DemoStore.getListingById(id);
       if (item) {

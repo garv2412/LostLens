@@ -23,7 +23,20 @@ export default function MyReportsPage() {
   const [activeTab, setActiveTab] = useState<"all" | "lost" | "found">("all");
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadData = () => {
+  const loadData = async () => {
+    try {
+      const res = await fetch("/api/listings");
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+        const mine = (json.data as Listing[]).filter((l) => l.reporterId === CURRENT_DEMO_USER.id);
+        setMyListings(mine);
+        setIsLoading(false);
+        return;
+      }
+    } catch {
+      // pass
+    }
+
     try {
       const all = DemoStore.getListings();
       // Filter listings reported by active demo user

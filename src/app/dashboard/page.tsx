@@ -32,21 +32,35 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const currentStats = DemoStore.getSystemStats();
-      const allListings = DemoStore.getListings();
-      const allMatches = DemoStore.getAllMatches();
-      const notifications = DemoStore.getNotifications();
+    async function loadDashboard() {
+      let listings = DemoStore.getListings();
+      try {
+        const res = await fetch("/api/listings");
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          listings = json.data;
+        }
+      } catch {
+        // pass
+      }
 
-      setStats(currentStats);
-      setRecentListings(allListings.slice(0, 4));
-      setTopMatches(allMatches.filter((m) => m.strength === "strong").slice(0, 3));
-      setRecentActivity(notifications.slice(0, 5));
-    } catch {
-      // pass
-    } finally {
-      setIsLoading(false);
+      try {
+        const currentStats = DemoStore.getSystemStats();
+        const allMatches = DemoStore.getAllMatches();
+        const notifications = DemoStore.getNotifications();
+
+        setStats(currentStats);
+        setRecentListings(listings.slice(0, 4));
+        setTopMatches(allMatches.filter((m) => m.strength === "strong").slice(0, 3));
+        setRecentActivity(notifications.slice(0, 5));
+      } catch {
+        // pass
+      } finally {
+        setIsLoading(false);
+      }
     }
+
+    loadDashboard();
   }, []);
 
   return (

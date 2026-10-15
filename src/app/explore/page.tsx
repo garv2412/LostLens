@@ -50,14 +50,29 @@ function ExploreContent() {
   });
 
   useEffect(() => {
-    try {
-      const data = DemoStore.getListings();
-      setAllListings(data);
-    } catch {
-      // pass
-    } finally {
-      setIsLoading(false);
+    async function fetchListings() {
+      try {
+        const res = await fetch("/api/listings");
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setAllListings(json.data);
+          return;
+        }
+      } catch {
+        // pass
+      }
+
+      try {
+        const data = DemoStore.getListings();
+        setAllListings(data);
+      } catch {
+        // pass
+      } finally {
+        setIsLoading(false);
+      }
     }
+
+    fetchListings().finally(() => setIsLoading(false));
   }, []);
 
   const filteredListings = useMemo(() => {
