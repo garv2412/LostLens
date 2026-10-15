@@ -136,6 +136,15 @@ export default function ListingDetailPage() {
   };
 
   const handleStatusToggle = async (newStatus: "active" | "closed" | "resolved") => {
+    try {
+      await fetch(`/api/listings/${listing.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+    } catch {
+      // pass
+    }
     DemoStore.updateListingStatus(listing.id, newStatus);
     loadData();
   };

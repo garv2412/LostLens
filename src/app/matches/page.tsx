@@ -27,7 +27,23 @@ function MatchesContent() {
   const [selectedStatus, setSelectedStatus] = useState<"all" | MatchStatus>("all");
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchMatches = () => {
+  const fetchMatches = async () => {
+    try {
+      const res = await fetch("/api/matches");
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+        setMatches(json.data);
+        if (inspectId) {
+          const found = (json.data as MatchCandidate[]).find((m) => m.id === inspectId);
+          if (found) setSelectedCandidate(found);
+        }
+        setIsLoading(false);
+        return;
+      }
+    } catch {
+      // pass
+    }
+
     try {
       const all = DemoStore.getAllMatches();
       setMatches(all);

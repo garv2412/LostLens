@@ -70,6 +70,7 @@ function ReportContent() {
   const [imageUrl, setImageUrl] = useState<string>(
     "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80"
   );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -94,18 +95,9 @@ function ReportContent() {
       setCategory(detectedFromFilename);
     }
 
-    setUploadProgress(10);
-    const reader = new FileReader();
-    reader.onload = () => {
-      setTimeout(() => {
-        setUploadProgress(70);
-        setTimeout(() => {
-          setImageUrl(reader.result as string);
-          setUploadProgress(null);
-        }, 300);
-      }, 200);
-    };
-    reader.readAsDataURL(file);
+    setSelectedFile(file);
+    const localUrl = URL.createObjectURL(file);
+    setImageUrl(localUrl);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -127,6 +119,55 @@ function ReportContent() {
 
     setIsSubmitting(true);
 
+    let finalImageUrl = imageUrl;
+    let finalS3Key: string | undefined = undefined;
+
+    // Handle direct S3 upload if user selected an image file
+    if (selectedFile) {
+      setUploadProgress(20);
+      try {
+        const presignedRes = await fetch("/api/upload/presigned", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fileName: selectedFile.name,
+            contentType: selectedFile.type,
+            fileSize: selectedFile.size,
+          }),
+        });
+
+        const presignedJson = await presignedRes.json();
+        if (presignedJson.success && presignedJson.data) {
+          const { uploadUrl, fileKey, finalPublicUrl, isSimulated } = presignedJson.data;
+          finalS3Key = fileKey;
+
+          if (!isSimulated) {
+            setUploadProgress(50);
+            const uploadRes = await fetch(uploadUrl, {
+              method: "PUT",
+              headers: {
+                "Content-Type": selectedFile.type,
+              },
+              body: selectedFile,
+            });
+
+            if (!uploadRes.ok) {
+              throw new Error("Failed to upload image directly to Amazon S3.");
+            }
+            finalImageUrl = finalPublicUrl;
+          } else {
+            finalImageUrl = finalPublicUrl || imageUrl;
+          }
+        }
+        setUploadProgress(90);
+      } catch (err: unknown) {
+        setFormError(err instanceof Error ? err.message : "Image upload failed. Please try again.");
+        setIsSubmitting(false);
+        setUploadProgress(null);
+        return;
+      }
+    }
+
     try {
       const res = await fetch("/api/listings", {
         method: "POST",
@@ -136,7 +177,8 @@ function ReportContent() {
           title,
           category,
           description,
-          imageUrl,
+          imageUrl: finalImageUrl,
+          s3Key: finalS3Key,
           color,
           brand,
           date,

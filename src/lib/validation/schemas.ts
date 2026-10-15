@@ -31,6 +31,8 @@ export const CreateListingSchema = z.object({
     .min(10, "Please provide a description with at least 10 characters")
     .max(1000, "Description cannot exceed 1000 characters"),
   imageUrl: z.string().min(1, "A photograph or image preview is required"),
+  s3Key: z.string().optional(),
+  s3Bucket: z.string().optional(),
   color: z.string().min(2, "Please specify a color (e.g. Black, Blue, Silver)"),
   brand: z.string().max(50).optional().or(z.literal("")),
   date: z

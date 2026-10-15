@@ -11,6 +11,7 @@ import { Listing, ListingStatus } from "../types/listing";
 import { Claim, ClaimStatus } from "../types/claim";
 import { AppNotification } from "../types/notification";
 import { DemoStore } from "../demo/store";
+import { CURRENT_DEMO_USER } from "../demo/seedData";
 
 const TABLES = {
   LISTINGS: process.env.DYNAMODB_TABLE_LISTINGS || "LostLens_Listings",
@@ -142,13 +143,65 @@ export class DynamoDbService {
 
   // --- CLAIMS ---
 
+  public static async getClaims(): Promise<Claim[]> {
+    if (!isLiveMode()) {
+      return DemoStore.getClaims();
+    }
+
+    try {
+      const client = getDynamoDocClient();
+      const command = new ScanCommand({
+        TableName: TABLES.CLAIMS,
+        Limit: 100,
+      });
+      const response = await client.send(command);
+      return (response.Items as Claim[]) || [];
+    } catch {
+      return DemoStore.getClaims();
+    }
+  }
+
   public static async createClaim(
     listingId: string,
     distinguishingDetails: string,
     additionalProof?: string,
-    matchId?: string
+    matchId?: string,
+    claimantName?: string,
+    claimantEmail?: string
   ): Promise<Claim> {
-    return DemoStore.createClaim(listingId, distinguishingDetails, additionalProof, matchId);
+    if (!isLiveMode()) {
+      return DemoStore.createClaim(listingId, distinguishingDetails, additionalProof, matchId);
+    }
+
+    try {
+      const client = getDynamoDocClient();
+      const id = `clm_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+      const timestamp = new Date().toISOString();
+      const item: Claim = {
+        id,
+        listingId,
+        matchId,
+        claimantId: CURRENT_DEMO_USER.id,
+        claimantName: claimantName || CURRENT_DEMO_USER.name,
+        claimantEmail: claimantEmail || CURRENT_DEMO_USER.email,
+        distinguishingDetails,
+        additionalProof,
+        status: "pending",
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      };
+
+      await client.send(
+        new PutCommand({
+          TableName: TABLES.CLAIMS,
+          Item: item,
+        })
+      );
+      DemoStore.saveClaim(item);
+      return item;
+    } catch {
+      return DemoStore.createClaim(listingId, distinguishingDetails, additionalProof, matchId);
+    }
   }
 
   public static async updateClaimStatus(
@@ -156,6 +209,34 @@ export class DynamoDbService {
     status: ClaimStatus,
     decisionNote?: string
   ): Promise<Claim | null> {
-    return DemoStore.updateClaimStatus(claimId, status, decisionNote);
+    if (!isLiveMode()) {
+      return DemoStore.updateClaimStatus(claimId, status, decisionNote);
+    }
+
+    try {
+      const client = getDynamoDocClient();
+      const timestamp = new Date().toISOString();
+      const command = new UpdateCommand({
+        TableName: TABLES.CLAIMS,
+        Key: { id: claimId },
+        UpdateExpression: "SET #status = :status, #updatedAt = :updatedAt, #decisionNote = :decisionNote",
+        ExpressionAttributeNames: {
+          "#status": "status",
+          "#updatedAt": "updatedAt",
+          "#decisionNote": "decisionNote",
+        },
+        ExpressionAttributeValues: {
+          ":status": status,
+          ":updatedAt": timestamp,
+          ":decisionNote": decisionNote || null,
+        },
+        ReturnValues: "ALL_NEW",
+      });
+      const response = await client.send(command);
+      DemoStore.updateClaimStatus(claimId, status, decisionNote);
+      return response.Attributes as Claim;
+    } catch {
+      return DemoStore.updateClaimStatus(claimId, status, decisionNote);
+    }
   }
 }

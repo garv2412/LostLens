@@ -33,6 +33,8 @@ export interface Listing {
   description: string;
   imageUrl: string;
   thumbnailUrl?: string;
+  s3Key?: string;
+  s3Bucket?: string;
   color: string;
   brand?: string;
   date: string; // ISO date string YYYY-MM-DD

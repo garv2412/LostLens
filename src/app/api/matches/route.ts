@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DemoStore } from "@/lib/demo/store";
-import { MatchStatus, MatchStrength } from "@/lib/types/match";
+import { DynamoDbService } from "@/lib/aws/dynamodb";
+import { isLiveMode } from "@/lib/aws/config";
+import { generateCandidateMatch } from "@/lib/matching/engine";
+import { MatchCandidate, MatchStatus, MatchStrength } from "@/lib/types/match";
 
 export async function GET(req: NextRequest) {
   try {
@@ -9,7 +12,26 @@ export async function GET(req: NextRequest) {
     const strength = searchParams.get("strength") as MatchStrength | null;
     const status = searchParams.get("status") as MatchStatus | null;
 
-    let matches = DemoStore.getAllMatches();
+    let matches: MatchCandidate[];
+
+    if (isLiveMode()) {
+      const allListings = await DynamoDbService.getListings();
+      const lostListings = allListings.filter((l) => l.type === "lost");
+      const foundListings = allListings.filter((l) => l.type === "found");
+      const dynamicMatches: MatchCandidate[] = [];
+
+      for (const lost of lostListings) {
+        for (const found of foundListings) {
+          const candidate = generateCandidateMatch(lost, found);
+          if (candidate && candidate.score >= 45) {
+            dynamicMatches.push(candidate);
+          }
+        }
+      }
+      matches = dynamicMatches.sort((a, b) => b.score - a.score);
+    } else {
+      matches = DemoStore.getAllMatches();
+    }
 
     if (listingId) {
       matches = matches.filter(

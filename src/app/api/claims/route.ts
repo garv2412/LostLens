@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { CreateClaimSchema, ClaimDecisionSchema } from "@/lib/validation/schemas";
-import { DemoStore } from "@/lib/demo/store";
+import { DynamoDbService } from "@/lib/aws/dynamodb";
 import { ClaimStatus } from "@/lib/types/claim";
 
 export async function GET(req: NextRequest) {
@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const listingId = searchParams.get("listingId");
 
-    let claims = DemoStore.getClaims();
+    let claims = await DynamoDbService.getClaims();
     if (listingId) {
       claims = claims.filter((c) => c.listingId === listingId);
     }
@@ -43,11 +43,13 @@ export async function POST(req: NextRequest) {
     }
 
     const input = parsed.data;
-    const newClaim = DemoStore.createClaim(
+    const newClaim = await DynamoDbService.createClaim(
       input.listingId,
       input.distinguishingDetails,
       input.additionalProof,
-      input.matchId
+      input.matchId,
+      input.claimantName,
+      input.claimantEmail
     );
 
     return NextResponse.json(
@@ -82,7 +84,7 @@ export async function PATCH(req: NextRequest) {
     const { claimId, decision, decisionNote } = parsed.data;
     const targetStatus: ClaimStatus = decision === "accept" ? "accepted" : "rejected";
 
-    const updated = DemoStore.updateClaimStatus(claimId, targetStatus, decisionNote);
+    const updated = await DynamoDbService.updateClaimStatus(claimId, targetStatus, decisionNote);
     if (!updated) {
       return NextResponse.json(
         { success: false, error: "Claim not found" },

@@ -96,6 +96,8 @@ export async function POST(req: NextRequest) {
       category: resolvedCategory,
       title: input.title,
       color: input.color,
+      s3Key: input.s3Key,
+      s3Bucket: input.s3Bucket || process.env.AWS_S3_BUCKET_NAME,
     });
 
     const listingData: Omit<Listing, "id" | "createdAt" | "updatedAt"> = {
@@ -104,6 +106,8 @@ export async function POST(req: NextRequest) {
       category: resolvedCategory,
       description: input.description,
       imageUrl: input.imageUrl,
+      s3Key: input.s3Key,
+      s3Bucket: input.s3Bucket || process.env.AWS_S3_BUCKET_NAME,
       color: input.color,
       brand: input.brand || undefined,
       date: input.date,
