@@ -46,7 +46,7 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-50 overflow-y-auto p-4 sm:p-6">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm transition-opacity"
@@ -54,13 +54,14 @@ export const Modal: React.FC<ModalProps> = ({
         aria-hidden="true"
       />
 
-      {/* Modal Dialog */}
-      <div
-        className={cn(
-          "relative w-full rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-2xl border border-slate-100 dark:border-slate-800 z-10 animate-fade-in my-8",
-          maxWidthClasses[maxWidth]
-        )}
-      >
+      {/* Modal Dialog Centering Container */}
+      <div className="min-h-full flex items-center justify-center p-2">
+        <div
+          className={cn(
+            "relative w-full rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-2xl border border-slate-100 dark:border-slate-800 z-10 animate-fade-in my-auto",
+            maxWidthClasses[maxWidth]
+          )}
+        >
         <div className="flex items-start justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
           <div>
             <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{title}</h2>
@@ -79,6 +80,7 @@ export const Modal: React.FC<ModalProps> = ({
 
         <div className="mt-4">{children}</div>
       </div>
+    </div>
     </div>
   );
 };

@@ -12,6 +12,12 @@ export async function GET() {
       mode,
       isLive: isLiveMode(),
       awsRegion: getAwsRegion(),
+      diagnostics: {
+        configuredAppMode: process.env.NEXT_PUBLIC_APP_MODE || "undefined",
+        hasAwsRegion: Boolean(process.env.AWS_REGION),
+        hasAwsAccessKeyId: Boolean(process.env.AWS_ACCESS_KEY_ID),
+        hasAwsSecretAccessKey: Boolean(process.env.AWS_SECRET_ACCESS_KEY),
+      },
       stats,
       services: {
         s3: {
